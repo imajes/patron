@@ -28,7 +28,9 @@ module Patron
   # Represents the response from the HTTP server.
   class Response
 
-    def initialize(url, status, redirect_count, header_data, body, default_charset = "UTF-8")
+    def initialize(url, status, redirect_count, header_data, body, default_charset = nil)
+      # Don't let a response clear out the default charset, which would cause encoding to fail
+      default_charset = "UTF-8" unless default_charset
       @url            = url
       @status         = status
       @redirect_count = redirect_count
@@ -41,6 +43,7 @@ module Patron
       end
 
       parse_headers(header_data)
+
       if @headers["Content-Type"] && @headers["Content-Type"][0, 5] == "text/"
         convert_to_default_encoding!(@body)
       end
@@ -74,6 +77,8 @@ module Patron
     end
 
     def convert_to_default_encoding!(str)
+      puts "CHARSET IS... #{charset}"
+
       if str.respond_to?(:encode) && Encoding.default_internal
         str.force_encoding(charset).encode!(Encoding.default_internal)
       end
