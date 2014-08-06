@@ -77,8 +77,6 @@ module Patron
     end
 
     def convert_to_default_encoding!(str)
-      puts "CHARSET IS... #{charset}"
-
       if str.respond_to?(:encode) && Encoding.default_internal
         str.force_encoding(charset).encode!(Encoding.default_internal)
       end
