@@ -69,7 +69,7 @@ module Patron
     def determine_charset(header_data, body)
       header_data.match(charset_regex) || (body && body.match(charset_regex))
 
-      $1
+      $1 == "UTF8" ? "UTF-8" : $1
     end
 
     def charset_regex
